@@ -7,7 +7,6 @@ import {
 // import router from '../router/index'
 // import Cookies from 'js-cookie'
 // import wechat from './wechat'
-import { interfaceUrl } from './config'
 
 let Error = function (status, message) {
     this.status = status || 0
@@ -51,8 +50,8 @@ let sendRequest = (conf, successCallback, errorCallback) => {
 let ajax = function (json) {
     // console.log(json);
     // let interfaceUrl = 'http://192.168.3.152:8080/nfrb'
-    // let interfaceUrl = 'http://192.168.3.152:8180/sanshuiWeb/'
-    // let interfaceUrl = 'http://nfrb.ydcycloud.com/nfrb'
+    // let interfaceUrl = 'http://192.168.3.5:8080/nfrb'
+    let interfaceUrl = 'http://nfrb.ydcycloud.com/nfrb'
     // let interfaceUrl = 'http://muqin.free.ngrok.cc/nfrb'
     let conf = {
         url: interfaceUrl + json.url,

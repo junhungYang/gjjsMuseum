@@ -1,21 +1,34 @@
-import Cookies from 'js-cookie'
+// import store from './store'
 export default {
-    setProfessionList (state, payload) {
-        state.professionList = payload
+    selectedDay (state, day) {
+        state.selectedInfo.daySltActive = day
     },
-    setTradeList (state, payload) {
-        state.tradeList = payload
+    ticketType (state, type) {
+        state.selectedInfo.ticketType = type
     },
-    setCompanyInfo (state, payload) {
-        state.companyInfo = payload
+    selectSpec (state, payload) {
+        state.selectedInfo.selectedSpec = payload
     },
-    setUserInfo (state, payload) {
-        if (!payload) {
-            Cookies.remove('userInfo')
-            state.userInfo = {}
-        } else {
-            Cookies.set('userInfo', payload)
-            state.userInfo = payload
-        }
+    selectSingleCount (state, payload) {
+        state.selectedInfo.singleCount = payload
+    },
+    selectTime (state, payload) {
+        state.selectedInfo.selectedTime = payload
+    },
+    addContactInfo (state, payload) {
+        state.selectedInfo.contactName = payload.contactName
+        state.selectedInfo.contactPhone = payload.contactPhone
+        state.selectedInfo.area = payload.area
+        state.selectedInfo.sex = payload.sex
+        state.selectedInfo.areaCode = payload.areaCode
+    },
+    setScanStatus (state, status) {
+        state.scanStatus = status
+    },
+    showMessage (state, payload) {
+        state.showMessage = payload
+    },
+    setVisitNotice (state, payload) {
+        state.visitNotice = payload
     }
 }

@@ -1,7 +1,8 @@
-接口文档 https://www.showdoc.cc/web/#/65227429483371?page_id=368163325170536
-# y
+# gjjs
+# 接口文档https://www.showdoc.cc/9787368252134?page_id=59544866958097
+#南方日报文档https://www.zybuluo.com/MICHAELJFEI/note/1260774
 
-> y
+> A Vue.js project
 
 ## Build Setup
 
@@ -17,6 +18,15 @@ npm run build
 
 # build for production and view the bundle analyzer report
 npm run build --report
+
+# run unit tests
+npm run unit
+
+# run e2e tests
+npm run e2e
+
+# run all tests
+npm test
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).

@@ -1,33 +1,30 @@
 <template>
     <transition name="fade">
-        <div class="addressSlt" @click.stop="hideAddress" >
+        <div class="addressSlt" @click.stop="hideAddress">
             <div class="address">
                 <div class="title">
-                    <p @click.stop>请选择所在地区
-                    </p>
+                    <p @click.stop>请选择居住地区</p>
                     <span @click.stop="hideAddress">×</span>
                 </div>
-                <div class="selectedWrapper">
-                    <div class="selected">
-                        <div class="area" v-for="item, index in selectedInfo"
-                             @click.stop="backTo(index)">{{item.name}}
-                        </div>
+                <div class="selected">
+                    <div class="area" :class="areaActive == index ? 'active' : ''" v-for="item, index in selectedInfo"
+                         @click.stop="backTo(index)">{{item.name}}
                     </div>
                 </div>
                 <ul class="selectWrapper">
                     <li class="addList" :class="addProvinceActive == index ? 'active' : ''" v-if="showSlt === 0"
                         v-for="item, index in addressInfo" @click.stop="getCityList(index)">
-                        {{item.name}}
+                        {{item.name}}<i></i>
                     </li>
                     <li class="addList" :class="addCityActive == index ? 'active' : ''" v-if="showSlt === 1"
                         v-for="item, index in cityList"
                         @click.stop="getDistrictList(index)">
-                        {{item.name}}
+                        {{item.name}}<i></i>
                     </li>
                     <li class="addList" :class="addDistrictActive == index ? 'active' : ''" v-if="showSlt === 2"
                         v-for="item, index in districtList"
                         @click.stop="getDistrict(index)">
-                        {{item.name}}
+                        {{item.name}}<i></i>
                     </li>
                 </ul>
             </div>
@@ -39,7 +36,6 @@
     export default {
         data () {
             return {
-                color: '#0070bc',
                 areaActive: -1,
                 selectedInfo: [],
                 addProvinceActive: -1,
@@ -55,7 +51,6 @@
             }
         },
         computed: {
-
         },
         created () {
             this.getPicker()
@@ -176,26 +171,24 @@
                 font-weight: normal;
             }
         }
-        .selectedWrapper {
-            border-top: 1px solid #e8e8e8;
-            border-bottom: 1px solid #e8e8e8;
-        }
         .selected {
             display: flex;
             width: 100%;
             height: 3rem;
+            border: 1px solid #e8e8e8;
+            border-right: none;
+            border-left: none;
             padding-left: 1.3rem;
             font-size: 1rem;
             .area {
-                color: #353535;
                 height: 100%;
                 line-height: 2.8rem;
                 text-align: center;
                 margin-right: 5rem;
-                &:last-child {
-                    color: #0070bc;
-                    border-bottom: 1px solid #0070bc;
-                }
+            }
+            .active {
+                color: #c22d27;
+                border-bottom: 1px solid #c22d27;
             }
         }
         .selectWrapper {
@@ -208,22 +201,20 @@
                 text-align: left;
                 height: 3rem;
                 line-height: 3rem;
-                color: #353535;
                 &:last-child {
                     margin-bottom: 2rem;
                 }
             }
             .active {
-                color: #0070bc;
-                &:after {
-                    content: '';
+                color: #c22d27;
+                i {
                     display: inline-block;
-                    vertical-align: middle;
-                    width: 1.8rem;
-                    height: 1.8rem;
-                    margin-top: -0.1rem;
-                    background: url("../assets/icons/selected.svg") no-repeat center;
-                    background-size: 100%;
+                    width: 0.8rem;
+                    height: 0.6rem;
+                    background: url("../assets/icons/gou.png") no-repeat center;
+                    background-size: 0.8rem 0.6rem;
+                    margin-left: 0.5rem;
+                    margin-bottom: 0.05rem;
                 }
             }
         }

@@ -43,7 +43,7 @@ function resolveFixed () {
     })
     document.querySelectorAll('input[type=text], textarea').forEach((el) => {
         el.addEventListener('blur', () => {
-            timer = setTimeout(() => { // 延迟是等待输入法消失
+            timer = setTimeout(() => {  // 延迟是等待输入法消失
                 document.getElementsByClassName('fixed').forEach((el2) => {
                     el2.style.top = ''
                 })

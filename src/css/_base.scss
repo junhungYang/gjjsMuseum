@@ -1,3 +1,158 @@
+$bgc: rgba(255, 255, 255, 0.8);
+
+.mark {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    overflow: hidden;
+}
+
+.fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+}
+
+.fade-enter, .fade-leave-to {
+    opacity: 0;
+}
+
+@keyframes noticeScroll {
+    from {
+        transform: translate3d(100vw, 0, 0);
+    }
+    to {
+        transform: translate3d(-100%, 0, 0)
+    }
+}
+
+.btn_1 {
+    padding: 0.7rem 0.9rem;
+    background: #ffffff;
+    border-radius: 1.1rem;
+    font-size: 1rem;
+    color: #353535;
+    box-shadow: 0 0.1rem 0.2rem #b5b5b5;
+}
+
+.btn_2 {
+    width: 14.75rem;
+    height: 3.75rem;
+    line-height: 3.75rem;
+    text-align: center;
+    color: #ffffff;
+    font-size: 1.5rem;
+    background: #c22d27;
+    border-radius: 1rem;
+    margin: 0 auto;
+    box-shadow: 0 0.1rem 0.2rem #b5b5b5;
+    display: block;
+}
+
+.radioActive {
+    color: #353535;
+    .radio_1 {
+        border: 1px solid #353535;
+        &:after {
+            content: '';
+            position: absolute;
+            left: 1px;
+            top: 1px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #c22d27;
+        }
+    }
+}
+
+.radio_1 {
+    position: relative;
+    display: inline-block;
+    top: -1px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1px solid #8e8e8e;
+    margin-right: 1rem;
+}
+
+@media screen and(min-width: 319px) and(max-width: 359px) {
+    .radioActive {
+        color: #353535;
+        .radio_1 {
+            border: 1px solid #353535;
+            &:after {
+                content: '';
+                position: absolute;
+                left: 1px;
+                top: 1px;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: #c22d27;
+            }
+        }
+    }
+    .radio_1 {
+        position: relative;
+        display: inline-block;
+        vertical-align: middle;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        border: 1px solid #8e8e8e;
+        margin-right: 1rem;
+    }
+}
+
+@media screen and(min-width: 360px) and(max-width: 400px) {
+    .radioActive {
+        color: #353535;
+        .radio_1 {
+            border: 1px solid #353535;
+            &:after {
+                content: '';
+                position: absolute;
+                left: 1px;
+                top: 1px;
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background: #c22d27;
+            }
+        }
+    }
+    .radio_1 {
+        position: relative;
+        display: inline-block;
+        vertical-align: middle;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border: 1px solid #8e8e8e;
+        margin-right: 1rem;
+    }
+}
+
+.jintou {
+    position: relative;
+    &:after {
+        content: '';
+        position: absolute;
+        top: 0.2rem;
+        right: -1.2rem;
+        width: 0.6rem;
+        height: 0.6rem;
+        border: 0.1rem solid #8e8e8e;
+        border-bottom: none;
+        border-left: none;
+        transform: rotate(45deg);
+    }
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -36,13 +191,10 @@ input, button {
     font-size: inherit;
     border: none;
     background: none;
-    /* -webkit-appearance: none; */
+    -webkit-appearance: none;
     border-radius: 0;
 }
 
-input::placeholder, textarea::placeholder {
-    color: #8e8e8e;
-}
 button:hover {
     cursor: pointer;
 }
@@ -67,67 +219,4 @@ html, body {
     line-height: 1.15;
     font-family: "PingFang SC", "Microsoft YaHei", Arial, Helvetica, sans-serif;
     -webkit-tap-highlight-color: transparent;
-}
-
-.btn_01 {
-    display: block;
-    width: 12rem;
-    height: 3rem;
-    margin: 0 auto;
-    line-height: 3rem;
-    text-align: center;
-    color: #fff;
-    background: #0070ba;
-    border-radius: 1rem;
-    font-size: 1.2rem;
-}
-.avatar {
-    background: url("../assets/img/defaultAvatar.jpg") no-repeat center;
-    background-size: 110%;
-}
-.avatar[src] {
-    background: none;
-}
-.hide-select {
-    position: relative;
-    select {
-        opacity: 0;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-    }
-}
-//
-//.dropLoading-cont {
-//    display: block;
-//    height: 3.5rem;
-//    //display: none;
-//}
-.dropLoading {
-    display: block;
-    text-align: center;
-    padding: 1rem 0;
-    color: #8e8e8e;
-    font-size: 1.2rem;
-    line-height: 1.5rem;
-    visibility: hidden;
-    .dropLoading-i {
-        display: inline-block;
-        width:1.5rem;
-        height:1.5rem;
-        vertical-align: middle;
-        margin-right: 1rem;
-        background: url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox%3D'0 0 120 120' xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg' xmlns%3Axlink%3D'http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink'%3E%3Cdefs%3E%3Cline id%3D'l' x1%3D'60' x2%3D'60' y1%3D'7' y2%3D'27' stroke%3D'%236c6c6c' stroke-width%3D'11' stroke-linecap%3D'round'%2F%3E%3C%2Fdefs%3E%3Cg%3E%3Cuse xlink%3Ahref%3D'%23l' opacity%3D'.27'%2F%3E%3Cuse xlink%3Ahref%3D'%23l' opacity%3D'.27' transform%3D'rotate(30 60%2C60)'%2F%3E%3Cuse xlink%3Ahref%3D'%23l' opacity%3D'.27' transform%3D'rotate(60 60%2C60)'%2F%3E%3Cuse xlink%3Ahref%3D'%23l' opacity%3D'.27' transform%3D'rotate(90 60%2C60)'%2F%3E%3Cuse xlink%3Ahref%3D'%23l' opacity%3D'.27' transform%3D'rotate(120 60%2C60)'%2F%3E%3Cuse xlink%3Ahref%3D'%23l' opacity%3D'.27' transform%3D'rotate(150 60%2C60)'%2F%3E%3Cuse xlink%3Ahref%3D'%23l' opacity%3D'.37' transform%3D'rotate(180 60%2C60)'%2F%3E%3Cuse xlink%3Ahref%3D'%23l' opacity%3D'.46' transform%3D'rotate(210 60%2C60)'%2F%3E%3Cuse xlink%3Ahref%3D'%23l' opacity%3D'.56' transform%3D'rotate(240 60%2C60)'%2F%3E%3Cuse xlink%3Ahref%3D'%23l' opacity%3D'.66' transform%3D'rotate(270 60%2C60)'%2F%3E%3Cuse xlink%3Ahref%3D'%23l' opacity%3D'.75' transform%3D'rotate(300 60%2C60)'%2F%3E%3Cuse xlink%3Ahref%3D'%23l' opacity%3D'.85' transform%3D'rotate(330 60%2C60)'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") no-repeat;
-        background-size: 1.5rem;
-        -webkit-animation: spin360 1s steps(12,end) infinite;
-        animation: spin360 1s steps(12,end) infinite;
-    }
-}
-@keyframes spin360 {
-    100% {
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-    }
 }

@@ -1,144 +1,62 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import store from '../store'
-import Cookies from 'js-cookie'
+// import wechat from '../js/wechat'
 
-const index = () => import('@/views/index')
-const companyList = () => import('@/views/companyList')
-const personal = () => import('@/views/personal')
-const searchCompany = () => import('@/views/searchCompany')
-const searchJob = () => import('@/views/searchJob')
-const infoInput = () => import('@/views/infoInput')
-const certificate = () => import('@/views/certificate')
-const applyRecord = () => import('@/views/applyRecord')
-const company = () => import('@/views/company/company')
-const companyIntroduction = () => import('@/views/company/introduction')
-const companyJob = () => import('@/views/company/job')
-const companyJobList = () => import('@/views/company/jobList')
-const changePassword = () => import('@/views/changePassword')
+const index = r => require.ensure([], () => r(require('../pages/index.vue')), 'index')  // 按需加载
+const enlistRecord = r => require.ensure([], () => r(require('../pages/enlistRecord.vue')), 'enlistRecord')
+const login = r => require.ensure([], () => r(require('../pages/login.vue')), 'login')
+const shortcut = r => require.ensure([], () => r(require('../pages/shortcut.vue')), 'shortcut')
+const scan = r => require.ensure([], () => r(require('../pages/scan.vue')), 'scan')
+const addInfo = r => require.ensure([], () => r(require('../pages/addInfo.vue')), 'addInfo')
+
 Vue.use(Router)
 
-let router = new Router({
+const router = new Router({
     routes: [
         {
             path: '/',
             component: index,
-            name: 'index',
+            name: index
         },
         {
-            path: '/companyList',
-            component: companyList,
-            name: 'companyList'
+            path: '/enlistRecord',
+            component: enlistRecord,
+            name: enlistRecord
         },
         {
-            path: '/personal',
-            component: personal,
-            name: 'personal',
+            path: '/login',
+            component: login,
+            name: login
+        },
+        {
+            path: '/shortcut',
+            component: shortcut,
+            name: shortcut
+        },
+        {
+            path: '/scan',
+            component: scan,
+            name: scan,
             meta: {
-                // checkAuth: true
+                requiresLogin: true
             }
         },
         {
-            path: '/searchCompany',
-            component: searchCompany,
-            name: 'searchCompany'
-        },
-        {
-            path: '/searchJob',
-            component: searchJob,
-            name: 'searchJob'
-        },
-        {
-            path: '/personal/register',
-            component: infoInput,
-            name: 'register'
-        },
-        {
-            path: '/personal/infoModify',
-            component: infoInput,
-            name: 'infoModify',
-            meta: {
-                checkAuth: true
-            }
-        },
-        {
-            path: '/personal/certificate',
-            component: certificate,
-            name: 'certificate',
-            meta: {
-                checkAuth: true
-            }
-        },
-        {
-            path: '/personal/applyRecord',
-            component: applyRecord,
-            name: 'applyRecord',
-            meta: {
-                checkAuth: true
-            }
-        },
-        {
-            path: '/personal/changePassword',
-            component: changePassword,
-            name: 'changePassword',
-            meta: {
-                checkAuth: true
-            }
-        },
-        {
-            path: '/company/:id',
-            component: company,
-            name: 'company',
-            redirect: '/company/:id/introduction',
-            children: [
-                {
-                    path: 'job',
-                    component: companyJob,
-                    name: 'companyJob'
-                },
-                {
-                    path: 'jobList',
-                    component: companyJobList,
-                    name: 'companyJobList'
-                },
-                {
-                    path: 'introduction',
-                    component: companyIntroduction,
-                    name: 'companyIntroduction'
-                }
-            ]
-        },
+            path: '/addInfo',
+            component: addInfo,
+            name: addInfo
+        }
     ]
 })
-
-/*
- *   验证是否需要登录，控制路由跳转
- * */
 router.beforeEach((to, from, next) => {
-    if (to.matched.some(record => record.meta.checkAuth)) { // 是否需要登录
-        if (!logined()) {
-            store.commit('showError', '请先登录')
-            next({
-                path: '/personal'
-            })
-        } else {
-            next()
-        }
+    // wechat.wechatAuth()
+    // let timestamp = new Date().getTime()
+    let isLogin = window.sessionStorage.getItem('isLogin')
+    if (to.meta.requiresLogin) {
+        isLogin === 'true' ? next() : next({path: '/login'})
     } else {
         next()
     }
 })
-
-function logined () {
-    if (store.state.userInfo.name) {
-        return true
-    }
-    let userInfo = Cookies.getJSON('userInfo')
-    if (userInfo) {
-        store.commit('setUserInfo', userInfo)
-        return true
-    }
-    return false
-}
 
 export default router

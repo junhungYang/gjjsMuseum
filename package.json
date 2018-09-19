@@ -1,7 +1,8 @@
 {
-  "name": "sanshui",
+  "name": "gjjs",
   "version": "1.0.0",
   "description": "A Vue.js project",
+  "author": "undefindKellen <1456025949@qq.com>",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
@@ -14,11 +15,10 @@
   },
   "dependencies": {
     "axios": "^0.17.1",
+    "jquery": "^3.3.1",
     "js-cookie": "^2.2.0",
-    "swiper": "^4.3.3",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
-    "vue-swiper-component": "^2.0.2",
     "vuex": "^3.0.1",
     "weixin-js-sdk": "^1.2.0"
   },
