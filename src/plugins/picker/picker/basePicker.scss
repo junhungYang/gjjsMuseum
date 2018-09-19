@@ -1,0 +1,105 @@
+.#{$picker} {
+	position: fixed;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	font-size: 12px;
+	font-size: calc(100vw / 32);
+	z-index: 1000;
+	color: #353535;
+	display: none;
+}
+.#{$picker}_mask {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.2);
+	z-index: 999;
+	opacity: 0;
+	transition: opacity .3s ease-out;
+}
+
+.#{$picker}-active .#{$picker}_mask {
+	opacity: 1
+}
+
+.#{$picker}-hide .#{$picker}_mask {
+	opacity: 0;
+}
+
+.#{$picker}_wrap {
+	position: relative;
+	bottom: 0;
+	width: 100%;
+	max-width: 640px;
+	margin: 0 auto;
+	background: #fff;
+	overflow: hidden;
+	z-index: 1001;
+	/*animation: 2s ease-out forwards;*/
+	transition: transform .3s ease-out;
+	transform: translate3d(0, 100%, 0);
+}
+
+.#{$picker}-active .#{$picker}_wrap {
+	transform: translate3d(0, 0, 0);
+}
+
+.#{$picker}-hide .#{$picker}_wrap {
+	transform: translate3d(0, 100%, 0);
+}
+.#{$picker}_header {
+	height: 4em;
+	line-height: 4em;
+}
+.#{$picker}_title {
+	font-size: 1.2em;
+	font-weight: bold;
+	padding-left: 1.25em;
+}
+.#{$picker}_valueWrap {
+	border-top: 0.1em solid #e8e8e8;
+	border-bottom: 0.1em solid #e8e8e8;
+	height: 3em;
+	line-height: 3em;
+}
+.#{$picker}_value {
+	text-align: center;
+	font-size: 1em;
+}
+.#{$picker}_options {
+	position: relative;
+	height: 20em;
+	overflow: scroll;
+	font-size: 1em;
+	padding-bottom: 2em;
+}
+.#{$picker}_options > span {
+	display: block;
+	padding-left: 1.5em;
+	text-align: left;
+	height: 3em;
+	line-height: 3em;
+	color: #353535;
+}
+.#{$picker}_option-checked {
+	color: inherit !important;
+}
+.#{$picker}_checked-i {
+	position: relative;
+	top: 0.8em;
+	display: none;
+	width: 1.2em;
+	height: 1.2em;
+	vertical-align: top;
+	margin-left: 0.5em;
+}
+.#{$picker}_option-checked .#{$picker}_checked-i {
+	/*display: inline-block;*/
+	display: inline-block;
+}
+.#{$picker}_checked-i > svg {
+	display: block;
+}
