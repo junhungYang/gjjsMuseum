@@ -31,11 +31,11 @@ Vue.filter('formatDate2', val => {
         return val
     }
 })
+        /* eslint-disable no-new */
 let ua = navigator.userAgent.toLowerCase()
 let isWeixn = (ua && ua.match(/MicroMessenger/i) == "micromessenger") ? true : false
 if (isWeixn) {
     wechat.getOpenid(() => {
-        /* eslint-disable no-new */
         new Vue({
             el: '#app',
             router,
@@ -49,12 +49,17 @@ if (isWeixn) {
     })
 } else {
     let Url = 'http://nfrb.ydcycloud.com/nfrb/dist/index.html'
+    //获取版本信息
     getInsideVersion(function (res) {
         if (!res) {
+            //获取版本失败时 触发openApp方法进入应用宝下载链接
             window.openApp(12, false, true, Url, Url)
         } else {
+            //获取版本成功，并且版本号大于或等于3.8.0时
             if (res >= 380) {
-                getUserInfoFromInside(function (userInfo) {
+                if(res >= 460) {
+                    getUserInfoFromInside(function (userInfo) {
+                    //假如返回的数据中有phone以及userUuid时
                     if (userInfo.phone && userInfo.userUuid) {
                         setUserUuid({userUuid: userInfo.userUuid}).then(() => {
                             new Vue({
@@ -66,12 +71,8 @@ if (isWeixn) {
                             })
                         })
                     } else {
+                        //假如没有phone或userUuid,触发以下代码跳转到登录页面
                         window.location.href = 'getLoginPhoneInfo:///'
-                        // 获取登录信息
-                        // 该方法需要提前实现在全局下，当调用登录协议头时，客户端会调用该方法并传值
-                        /*
-						返回样例："{"userUuid":"fdfsafds-fdfsdfsdf-fdfasfsdf-fdsaff"}"
-						*/
                         window.getLoginUserData = function (userData) {
                             // 进入登录回调方法需要先隐藏绑定手机号弹框
                             // 隐藏绑定手机号弹窗代码
@@ -92,11 +93,34 @@ if (isWeixn) {
                             }
                         }
                     }
-                })
+                    })
+                }else {
+                    // 低于4.6.0版本直接获取登录信息
+                    // 进入登录协议头获取登录信息
+                    window.location.href = 'getLoginPhoneInfo:///';
+                    window.getLoginUserData = function (userData) {
+                        // 进入登录回调方法需要先隐藏绑定手机号弹框
+                        // 隐藏绑定手机号弹窗代码
+                        // 获取登录信息
+                        // 返回的是字符串，需要转换为Object
+                        let data = JSON.parse(userData);
+                        if (data.userUuid !== '') {
+                            // 得到用户的userUuid
+                            setUserUuid({userUuid: data.userUuid}).then(() => {
+                                new Vue({
+                                    el: '#app',
+                                    router,
+                                    store,
+                                    template: '<App/>',
+                                    components: {App}
+                                })
+                            })
+                        }
+                    }
+                }
             } else {
                 tips.show('请升级到最新版本')
             }
         }
     })
 }
-
