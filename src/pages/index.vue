@@ -218,6 +218,8 @@
             },
             getIndexData () {
                 getIndexData({}).then(data => {
+                    let dataStr = JSON.stringify(data)
+                    // alert(`getIndexData请求:返回数据=${dataStr}`)
                     this.week = data.week
                     if (this.noOrderMonday(0)) {
                         this.$store.commit('selectedDay', 1)
@@ -243,6 +245,8 @@
             },
             getNotice () {
                 getNotice().then(data => {
+                    let dataStr = JSON.stringify(data)
+                    // alert(`getNotice请求:返回数据=${dataStr}`)
                     this.notice = data.notice
                     this.tel = data.phone
                     this.$store.commit('setVisitNotice', data.content)
