@@ -6,7 +6,9 @@
                 <img src="../assets/images/bg.jpg" class="introduce" v-if="hasData === false || ticketDetail === {}">
                 <div class="border">
                     <div class="content">
-                        <div id="qrcode"></div>
+                        <div id="qrcode">
+                            <img :src="ticketDetail.codeUrl" alt="">
+                        </div>
                         <div class="detail">
                             <p class="day">{{entryDay}}</p>
                             <p class="time">{{ticketDetail.entryTime | formatDate2}}</p>
@@ -62,8 +64,9 @@
                 getTicketDetail({id: this.$route.query.id}).then(data => {
                     if (data === '') {
                         this.hasData = false
+                        alert('NO DATA')
                     }
-                    this.drawQrcode(data.ticketNumber)
+                    // this.drawQrcode(data.ticketNumber)
                     this.ticketDetail = data
 //                    this.ticketDetail.imageUrl = this.getImgBase64(this.ticketDetail.imageUrl)
                     let dayList = data.ticketTime.split('-')
