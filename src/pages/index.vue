@@ -5,6 +5,7 @@
                 <p :style="{animation: animation}">{{notice}}</p>
             </div>
         </div>
+         <div class="phonebind" v-show="!uphone"><div class="pbmain"><p>该用户还没有绑定手机号</p><p>登记需要绑定手机号~</p><span @click="gobindphone()">去绑定</span></div></div>
         <div class="top">
             <img class="logo" src="../assets/images/logo.png">
             <p class="name">珠三角工匠精神展示馆</p>
@@ -15,7 +16,7 @@
                 <p class="prompt">日期选择</p>
                 <ul class="date">
                     <li v-for="item, index in week" @click="selecteDay(index)"
-                        :class="{'ban' : (item.amTicket <= 0 && item.pmTicket <= 0) || (selectedInfo.ticketType === 2 && index <= 2)}">
+                        :class="{'ban' : (item.amTicket <= 0 && item.pmTicket <= 0) || (selectedInfo.ticketType === 2 && index <= 1)}">
                         <span>{{item.day}}</span>
                         <span
                             :class="{'active' : selectedInfo.daySltActive == index && (item.amTicket > 0 || item.pmTicket > 0)}">{{item.date | formatDate}}</span>
@@ -31,6 +32,10 @@
                           @click="selectType(2)"><i
                         class="radio_1"></i>团体票</span>
                 </div>
+            </div>
+            <div v-show="selectedInfo.ticketType === 2" class="formMap-enter jintou" @click="navToFormMapByGroup">
+                <p>团体预约需登记表单信息</p>
+                <p>前往填写</p>
             </div>
             <div class="numberSlt" :class="{'jintou' : selectedInfo.ticketType === 2}">
                 <p class="prompt">进馆人数</p>
@@ -88,6 +93,10 @@
         </div>
         <div class="btn_2" @click="submit">确认报名</div>
         <p class="tel">客服咨询热线：{{tel}}</p>
+        <p class="visit-time">
+            <span>参观时间每周一到周六</span>
+            <span>上午9:00-12:00 下午14:00-17:00</span> 
+        </p>
         <transition name="fade">
             <div class="selectSpec mark" v-if="showSelectSpec" @touchmove.prevent @click.stop="hideSelectSpec">
                 <div class="specWrapper">
@@ -116,13 +125,17 @@
                             报名人数：<span>{{selectedInfo.ticketType === 2 ? specList[selectedInfo.selectedSpec] : selectedInfo.singleCount + '&nbsp;人'}}</span>
                         </p>
                     </div>
-                    <dl>
-                        <dt>进场时间：</dt>
-                        <dd>
-                            {{week[selectedInfo.daySltActive].date}}，{{selectedInfo.ticketType === 2 ? week[selectedInfo.daySltActive].times[selectedInfo.selectedTime].time : singleTime[(selectedInfo.selectedTime - 6)]}}
-                        </dd>
-                    </dl>
-                    <dl v-if="selectedInfo.ticketType === 2">
+                    <div class="time-place">
+                        <div>
+                            <p>进场时间:</p>
+                            <p>{{week[selectedInfo.daySltActive].date}}，{{selectedInfo.ticketType === 2 ? week[selectedInfo.daySltActive].times[selectedInfo.selectedTime].time : singleTime[(selectedInfo.selectedTime - 6)]}}</p>
+                        </div>
+                        <div>
+                            <p>所在位置:</p>
+                            <p>广东省佛山市南海区金融城广场</p>
+                        </div>
+                    </div>
+                   <!--  <dl v-if="selectedInfo.ticketType === 2">
                         <dt>是否需要讲解员</dt>
                         <dd>
                         <span :class="{'radioActive' : guide === 1}" @click="guide = 1"><i
@@ -130,13 +143,13 @@
                             <span :class="{'radioActive' : guide === 2}" @click="guide = 2"><i
                                 class="radio_1"></i>否</span>
                         </dd>
-                    </dl>
-                    <dl class="company" v-if="selectedInfo.ticketType === 2">
+                    </dl> -->
+                    <!-- <dl class="company" v-if="selectedInfo.ticketType === 2">
                         <dt>团队或单位名称：</dt>
                         <dd>
                             <input type="text" placeholder="选填" v-model="teamName">
                         </dd>
-                    </dl>
+                    </dl> -->
                     <div class="confirm">
                         <span @click="showRegInfo = false">取消</span>
                         <span class="sure" @click="sureSubmit">确定</span>
@@ -144,12 +157,14 @@
                 </div>
             </div>
         </transition>
+        <v-pullup :options="pullupdata"></v-pullup>
     </div>
 </template>
 
 <script>
     import { getIndexData, addSelectedInfo, getNotice } from '../js/sendRequest'
-
+    import pullupbox from './pullupbox'
+    import ajax from '../js/ajax.js'
     export default {
         data () {
             return {
@@ -159,20 +174,31 @@
                 tickets: 0,
                 ticketsList: [],
 //                specList: ['10 - 20 人', '21 - 30 人', '31 - 40 人', '41 - 50 人'],
-                specList: ['20 - 50 人'],
+                specList: ['10 - 20 人','20 - 50 人'],
                 showSelectSpec: false,
                 showRegInfo: false,
                 teamName: '',
                 deadline: -1, // 过期时间下标 小于deadline则过期
                 singleTime: ['9:30-11:30', '15:00-17:00'],
-                tel: ''
+                tel: '',
+                pullupdata:[]
             }
+        },
+        mounted (){
+            // this.$nextTick(function(){
+            //     if(!this.uphone){
+            //       window.location.href = 'getLoginPhoneInfo:///'
+            //     }
+            // })
         },
         created () {
             this.getIndexData()
             this.getNotice()
         },
         computed: {
+             Store_formMapByGroup() {
+                return this.$store.state.Store_formMapByGroup
+            },
             selectedInfo () {
                 return this.$store.state.selectedInfo
             },
@@ -187,13 +213,22 @@
                 return 'noticeScroll ' + this.notice.length / 2 + 's linear 300'
             },
         },
+        components:{
+            'v-pullup' : pullupbox
+        },
         methods: {
+            navToFormMapByGroup() {
+                this.$router.push('/formMapByGroup')
+            },
             noOrderMonday (index) {
                 if (this.week[index].day === '一' && (this.week[index].amTicket > 0 || this.week[index].pmTicket > 0)) {
                     return false
                 } else if (this.week[index].day === '一') {
                     return true
                 }
+            },
+            gobindphone(){
+                window.location.href = 'getLoginPhoneInfo:///'
             },
             singleReduce () {
                 if (this.selectedInfo.singleCount === 1) {
@@ -230,7 +265,8 @@
                             contactPhone: data.phone,
                             sex: data.sex,
                             area: data.address,
-                            areaCode: data.areaCode
+                            areaCode: data.areaCode,
+                            remark: data.remark
                         })
                     }
                     this.judgeDeadline(this.selectedInfo.daySltActive)
@@ -253,7 +289,7 @@
                 })
             },
             selecteDay (index) {
-                if (this.selectedInfo.ticketType === 2 && index <= 2) {
+                if (this.selectedInfo.ticketType === 2 && index <= 1) {
                     return false
                 }
                 if (this.noOrderMonday(index)) {
@@ -321,25 +357,48 @@
                 this.$store.commit('ticketType', type)
             },
             submit () {
-                alert('请填写真实手机号码并保持通讯畅通，如遇重大活动或临时性闭馆，预约团队另行安排参观时间并将通过手机短信告知；')
+                // alert('请填写真实手机号码并保持通讯畅通，如遇重大活动或临时性闭馆，预约团队另行安排参观时间并将通过手机短信告知；')
                 if (this.selectedInfo.ticketType === 2) {
-                    if (this.selectedInfo.selectedSpec >= 0 && this.selectedInfo.selectedTime >= 0 && this.selectedInfo.contactName !== '') {
-                        this.showRegInfo = true
-                    } else if (this.selectedInfo.selectedSpec < 0) {
-                        alert('请选择进场人数')
-                    } else if (this.selectedInfo.selectedTime < 0) {
-                        alert('请选择进场时间')
-                    } else if (this.selectedInfo.contactName === '') {
-                        alert('请添加联系人信息')
+                     if (this.selectedInfo.selectedSpec < 0) {
+                        // alert('请选择进场人数')
+                        this.pullupdata= ['请填写真实手机号码并保持通讯畅通，如遇重大活动或临时性闭馆，预约团队另行安排参观时间并将通过手机短信告知','请选择进场人数'];
+                         this.$store.commit('changepullup',true);
+                         return
+                    } 
+                    if (this.selectedInfo.selectedTime < 0) {
+                        // alert('请选择进场时间')
+                        this.pullupdata= ['请填写真实手机号码并保持通讯畅通，如遇重大活动或临时性闭馆，预约团队另行安排参观时间并将通过手机短信告知','请选择进场时间'];
+                         this.$store.commit('changepullup',true);
+                         return
                     }
+                    if (this.selectedInfo.contactName === '') {
+                        // alert('请添加联系人信息')
+                        this.pullupdata= ['请填写真实手机号码并保持通讯畅通，如遇重大活动或临时性闭馆，预约团队另行安排参观时间并将通过手机短信告知','请添加联系人信息'];
+                         this.$store.commit('changepullup',true);
+                         return
+                    }
+                     let {teamType,activity,teamBy,teamNumber,teamDate,teamArry,teamer,teamerInfo} = {...this.Store_formMapByGroup}
+                    if(!teamType || !activity || !teamBy || !teamNumber || !teamDate || !teamArry || !teamer ||!teamerInfo) {
+                        this.pullupdata= ['请填写真实手机号码并保持通讯畅通，如遇重大活动或临时性闭馆，预约团队另行安排参观时间并将通过手机短信告知','请补完团体预约表单信息'];
+                         this.$store.commit('changepullup',true);
+                        return
+                    }
+                    this.showRegInfo = true
+
                 } else if (this.selectedInfo.ticketType === 1) {
-                    if (this.selectedInfo.selectedTime >= 6 && this.selectedInfo.contactName !== '') {
-                        this.showRegInfo = true
-                    } else if (this.selectedInfo.selectedTime < 6) {
-                        alert('请选择进场时间')
-                    } else if (this.selectedInfo.contactName === '') {
-                        alert('请添加联系人信息')
+                    if (this.selectedInfo.selectedTime < 6) {
+                        // alert('请选择进场时间')
+                        this.pullupdata= ['请填写真实手机号码并保持通讯畅通，如遇重大活动或临时性闭馆，预约团队另行安排参观时间并将通过手机短信告知','请选择进场时间'];
+                         this.$store.commit('changepullup',true);
+                         return
                     }
+                    if (this.selectedInfo.contactName === '') {
+                        // alert('请添加联系人信息')
+                        this.pullupdata= ['请填写真实手机号码并保持通讯畅通，如遇重大活动或临时性闭馆，预约团队另行安排参观时间并将通过手机短信告知','请添加联系人信息'];
+                         this.$store.commit('changepullup',true);
+                         return
+                    }
+                        this.showRegInfo = true
                 }
             },
             sureSubmit () {
@@ -377,7 +436,7 @@
                     entryTime = this.selectedInfo.selectedTime
                     count = this.selectedInfo.singleCount + 4
                 }
-                addSelectedInfo({
+                let req_params = {
                     contactName: this.selectedInfo.contactName,
                     contactPhone: this.selectedInfo.contactPhone,
                     dayNumber: this.selectedInfo.daySltActive,
@@ -387,6 +446,32 @@
                     type: this.selectedInfo.ticketType,
                     count: count,
                     sort: sort,
+                }
+                if(this.selectedInfo.ticketType === 2) {
+                    req_params = {...req_params,...this.Store_formMapByGroup}
+                      
+                }
+                ajax({
+                     url: '/wap/ticketWap/signUp',
+                    data:req_params,
+                    error: (data) =>{
+                        if (data.status === 700) {
+                         // alert('您今天已经报名过了')
+                         this.pullupdata= ['您今天已经报名过了'];
+                         this.$store.commit('changepullup',true);
+                     } else if (data.status === 307) {
+                         // alert('手机号验证未通过')
+                         this.pullupdata= ['手机号验证未通过'];
+                         this.$store.commit('changepullup',true);
+                     } else if (data.status === 701) {
+                         // alert('您已报名过该时间段')
+                         this.pullupdata= ['您已报名过改时间段'];
+                         this.$store.commit('changepullup',true);
+                     } else if (data.status === 311) {
+                         this.pullupdata = [data.messages]
+                         this.$store.commit('changepullup',true)
+                     }
+                }
                 }).then(() => {
                     this.$router.push('/enlistRecord')
                     this.$store.commit('showMessage', true)
@@ -447,6 +532,48 @@
                     line-height: 2.3rem;
                     text-align: left;
                     white-space: nowrap;
+                }
+            }
+        }
+        .phonebind{
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0px;
+            left:0px;
+            z-index: 10;
+            .pbmain{
+                width: 80%;
+                position: relative;
+                height: 11rem;
+                margin: 0 auto;
+                top: 50%;
+                margin-top: -5.5rem;
+                text-align:center;
+                background-color: white;
+                border: 1px solid;
+                border-color: rgb(133,75,20);
+                border-radius: 0.5rem;
+                p:nth-child(1){
+                    font-weight: bold;
+                    padding-top: 1.5rem;
+                    font-size: 1.5rem;
+                }
+                p:nth-child(2){
+                    color: gray;
+                    font-size: 1.2rem;
+                    padding-top: 1rem;
+                }
+                span{
+                    display: block;
+                    margin: 0 auto;
+                    margin-top: 1rem;
+                    width: 80%;
+                    height: 3rem;
+                    background-color: rgb(255,68,74);
+                    border-radius:0.5rem;
+                    line-height: 3rem;
+                    color: white;
                 }
             }
         }
@@ -527,6 +654,27 @@
                 justify-content: space-between;
                 color: #8e8e8e;
                 font-size: 1.2rem;
+            }
+        }
+         .formMap-enter {
+            height: 4.25rem;
+            display: flex;
+            align-items: center;
+            p:first-of-type {
+                flex: 1;
+                margin-left: 1.5rem;
+                font-size: 1.3rem;
+            }
+            p:last-of-type {
+                font-size: 1.2rem;
+            border: 1.5px solid #c22d27;
+                color: #c22d27;
+                padding: 0.5rem;
+                margin-right: 3rem;
+            }
+            &.jintou:after {
+                top: 1.825rem;
+                right: 1.5rem;
             }
         }
         .numberSlt {
@@ -697,11 +845,17 @@
         .btn_2 {
             margin-top: 2rem;
         }
-        .tel {
+        .tel,.visit-time {
             font-size: 1.2rem;
             color: #353535;
             text-align: center;
             margin-top: 2.5rem;
+        }
+         .visit-time {
+            margin-top: 0;
+            span {
+                display: block;
+            }
         }
         .selectSpec {
             .specWrapper {
@@ -785,20 +939,18 @@
                         }
                     }
                 }
-                & > dl {
+                .time-place {
                     width: 17.5rem;
-                    height: 5rem;
-                    border-bottom: 1px solid #e8e8e8;
-                    font-size: 1.2rem;
-                    dt, dd {
-                        margin-top: 1rem;
-                    }
-                    dd {
-                        float: right;
-                        span {
-                            margin: 0 0.5rem 0 2rem;
-                        }
-                    }
+                   border-bottom: 1px solid #e8e8e8;
+                   font-size: 1.2rem;
+                   div {
+                       p {
+                           line-height: 2.0rem;
+                       }
+                       p:last-of-type {
+                           text-align: right;
+                       }
+                   }
                 }
                 .company {
                     height: 4rem;

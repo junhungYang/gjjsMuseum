@@ -154,49 +154,6 @@ function getUserInfoFromInside (callback) {
 //     }
 // }
 // 分享地址，需自己配置
-var shareUrl = '';
-// 分享的icon，以下为南方+logo，需自己配置
-var shareIcon = 'https://static.nfapp.southcn.com/app/nanfang_logo.png';
-// 分享标题，需自己配置
-var shareTitle = '';
-// 分享描述，需自己配置
-var shareDesc = '';
-// 以下为客户端调取的方法，需提前实现
-window.setShareTitle = function (title) {
-    shareTitle = title;
-}
-window.setShareDesc = function (desc) {
-    shareDesc = desc;
-}
-window.getShareUrl = function () {
-    return shareUrl;
-}
-window.getShareDesc = function () {
-    return shareDesc;
-}
-window.getShareIcon = function () {
-    return shareIcon;
-}
-window.getShareTitle = function () {
-    return shareTitle;
-}
-window.getShareObj = function () {
-    window.activity.getShareUrl(shareUrl);
-    window.activity.getShareDesc(shareDesc);
-    window.activity.getShareTitle(shareTitle);
-    window.activity.getShareIcon(shareIcon);
-}
-// 需要动态更换分享信息需执行以下代码
-try {
-    window.activity.getShareUrl(shareUrl);
-    window.activity.getShareDesc(shareDesc);
-    window.activity.getShareTitle(shareTitle);
-    window.activity.getShareIcon(shareIcon);
-} catch (e) {}
-// 分享时阻止页面刷新
-try {
-    window.activity.setReloadWhileOnPause(false);
-} catch (e) {};
 
 export {
     getInsideVersion,

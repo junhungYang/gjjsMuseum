@@ -44,13 +44,14 @@
                 </div>
             </div>
         </transition>
+        <v-pullup :options="pullupdata"></v-pullup>
     </div>
 </template>
 
 <script>
     import wechat from '../js/wechat'
     import { getVisitNum, changeTicket, addRealPeople, getTicketScanInfo } from '../js/sendRequest'
-
+    import pullupbox from './pullupbox'
     export default {
         data () {
             return {
@@ -64,7 +65,8 @@
                 remark: '',
 //                specList: ['5 - 9 人', '10 - 20 人', '21 - 30 人', '31 - 40 人', '41 - 50 人'],
                 specList: ['20 - 50 人'],
-                timeList: ['9:30-10:30', '10:30-11:30', '14:00-15:00', '15:00-16:00', '16:00-17:00', '上午', '下午']
+                timeList: ['9:30-10:30', '10:30-11:30', '14:00-15:00', '15:00-16:00', '16:00-17:00', '上午', '下午'],
+                pullupdata:[]
             }
         },
         watch: {
@@ -101,6 +103,9 @@
             scanStatus () {
                 return this.$store.state.scanStatus // 705已核销 704 706已过期或未到时间 707已退票
             }
+        },
+        components:{
+            'v-pullup':pullupbox
         },
         methods: {
             scanQrCode () {
@@ -143,7 +148,9 @@
             verification () {
                 let peopleCount = parseInt(this.realNum)
                 if (isNaN(peopleCount)) {
-                    alert('请输入数字')
+                    // alert('请输入数字')
+                    this.pullupdata= ['请输入数字'];
+                    this.$store.commit('changepullup',true);
                     return false
                 }
                 if (this.ticketInfoState === 0) {

@@ -8,6 +8,7 @@ const login = r => require.ensure([], () => r(require('../pages/login.vue')), 'l
 const shortcut = r => require.ensure([], () => r(require('../pages/shortcut.vue')), 'shortcut')
 const scan = r => require.ensure([], () => r(require('../pages/scan.vue')), 'scan')
 const addInfo = r => require.ensure([], () => r(require('../pages/addInfo.vue')), 'addInfo')
+const formMapByGroup = r => require.ensure([], () => r(require('../pages/formMapByGroup.vue')), 'formMapByGroup')
 
 Vue.use(Router)
 
@@ -17,6 +18,11 @@ const router = new Router({
             path: '/',
             component: index,
             name: index
+        },
+        {
+            path: '/formMapByGroup',
+            name: 'formMapByGroup',
+            component: formMapByGroup
         },
         {
             path: '/enlistRecord',

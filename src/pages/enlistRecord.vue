@@ -58,9 +58,7 @@
             <div class="mark" v-if="showMessage" @touchmove.prevent>
                 <div class="visitNotice">
                     <p class="title">参观须知</p>
-                    <p class="content">
-                        {{visitNotice}}
-                    </p>
+                    <p class="content">{{visitNotice}}</p>
                     <span class="sure" @click="isShowMessage">确定</span>
                 </div>
             </div>
@@ -236,6 +234,7 @@
                 color: #9b1e23;
                 font-weight: bold;
                 padding-top: 1.5rem;
+                text-align: center;
             }
         }
         .topWrapper {
@@ -358,8 +357,7 @@
         }
         .visitNotice {
             width: 20rem;
-            height: 22rem;
-            margin: 10rem auto;
+            margin: 14rem auto;
             background: #ffffff;
             .title {
                 font-size: 1.6rem;
@@ -369,12 +367,10 @@
             }
             .content {
                 width: 15rem;
-                height: 14rem;
                 padding: 0 2.5rem;
                 word-break: break-all;
-                overflow: auto;
                 word-wrap: break-word;
-                white-space: pre-wrap;
+                text-align: center;
             }
             .sure {
                 width: 100%;

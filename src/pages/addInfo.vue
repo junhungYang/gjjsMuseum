@@ -33,6 +33,7 @@
         <div class="bottom" :class="{'disable' : submit === false}" @click="sureSubmit">确认保存</div>
         <addressSlt @selectedInformation="getAddress" :showAddress="showAddress" @close="closeAddressSlt"
                     v-if="showAddress"></addressSlt>
+        <v-pullup :options="pullupdata"></v-pullup>
     </div>
 </template>
 
@@ -40,6 +41,7 @@
     import addressSlt from '../components/addressSlt'
     import { addContactInfo } from '../js/sendRequest'
     import wechat from '../js/wechat'
+    import pullupbox from './pullupbox'
 
     export default {
         data () {
@@ -51,6 +53,7 @@
                 address: '',
                 showAddress: false,
                 areaCode: '',
+                pullupdata:[]
             }
         },
         computed: {
@@ -75,6 +78,7 @@
                 this.tel = this.userInfo.contactPhone
                 this.address = this.userInfo.area.split(' ').join('-')
                 this.areaCode = this.userInfo.areaCode
+                this.remarks = this.userInfo.remark
             },
             closeAddressSlt (bool) {
                 this.showAddress = bool
@@ -115,7 +119,9 @@
                             this.$router.push('/')
                         })
                     } else {
-                        alert('请输入正确手机号')
+                        // alert('请输入正确手机号')
+                        this.pullupdata= ['请输入正确手机号'];
+                         this.$store.commit('changepullup',true);
                     }
                 } else {
                     return false
@@ -123,7 +129,8 @@
             },
         },
         components: {
-            addressSlt
+            addressSlt,
+            'v-pullup' : pullupbox
         }
     }
 </script>

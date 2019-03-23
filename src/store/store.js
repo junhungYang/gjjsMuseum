@@ -20,9 +20,11 @@ const store = new Vuex.Store({
             areaCode: '', // 地区码
             singleCount: 1, // 单人票数
         },
+        Store_formMapByGroup:  null,
         scanStatus: 300, // 核销状态
         showMessage: false, // 显示报名后页面弹出消息
         visitNotice: '', // 参观须知
+        pullupshow:false //弹窗显示
     },
     mutations,
     actions,

@@ -24,6 +24,7 @@
                 <img :src="base64Img.tuipiao" class="seal" v-if="ticketDetail.state === '退票'">
             </div>
         </div>
+        <v-pullup :options="pullupdata"></v-pullup>
     </div>
 </template>
 
@@ -33,7 +34,7 @@
     import { getTicketDetail } from '../js/sendRequest'
     //    import { getTicketDetail } from '../js/testData'
     import base64Img from '../js/localImgBase64'
-
+    import pullupbox from './pullupbox'
     export default {
         data () {
             return {
@@ -41,6 +42,7 @@
                 entryDay: '',
                 hasData: true,
                 base64Img: {},
+                pullupdata:[]
             }
         },
         computed: {
@@ -54,6 +56,9 @@
             this.getTicketDetail()
             this.base64Img = base64Img
         },
+        components:{
+             'v-pullup':pullupbox
+        },
         methods: {
             drawQrcode (ticketNumber) {
                 /* eslint-disable */
@@ -64,7 +69,9 @@
                 getTicketDetail({id: this.$route.query.id}).then(data => {
                     if (data === '') {
                         this.hasData = false
-                        alert('NO DATA')
+                        // alert('NO DATA')
+                        this.pullupdata= ['NO DATA'];
+                        this.$store.commit('changepullup',true);
                     }
                     // this.drawQrcode(data.ticketNumber)
                     this.ticketDetail = data

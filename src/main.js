@@ -11,6 +11,9 @@ import { getInsideVersion, getUserInfoFromInside } from './js/appJuc'
 import { setUserUuid } from './js/sendRequest'
 import axios from 'axios'
 
+
+
+
 Vue.config.productionTip = false
 
 Vue.filter('formatDate', val => {  // 截取日期后两位
@@ -57,20 +60,43 @@ if (isWeixn) {
             if (res >= 380) {
                 getUserInfoFromInside(function (userInfo) {
                     // alert(`phone=${userInfo.phone}&userUuid=${userInfo.userUuid}&version=大于等于380`)
-                    if (userInfo.phone && userInfo.userUuid) {
+                    if (userInfo.userUuid) {
                         // axios.get(`http://nfrb.ydcycloud.com/common/user/addUserUuid?userUuid=${userInfo.userUuid}`).then(res => {
                         //     console.log(res)
                         // })
-                        setUserUuid({userUuid: userInfo.userUuid}).then((res) => {
-                            // alert(res)
-                            new Vue({
-                                el: '#app',
-                                router,
-                                store,
-                                template: '<App/>',
-                                components: {App}
-                            })
-                        })
+                         Vue.prototype.uphone = !!userInfo.phone;
+                                setUserUuid({userUuid: userInfo.userUuid}).then((res) => {
+                                    // alert(res)
+                                    new Vue({
+                                        el: '#app',
+                                        router,
+                                        store,
+                                        template: '<App/>',
+                                        components: {App}
+                                    })
+                                })
+                        window.getLoginUserData = function (userData) {
+                            // 进入登录回调方法需要先隐藏绑定手机号弹框
+                            // 隐藏绑定手机号弹窗代码
+                            // 获取登录信息
+                            // 返回的是字符串，需要转换为Object
+                            let data = JSON.parse(userData);
+                            // alert(`data=${userData}&version=低于380`)
+                            if (data.userUuid !== '') {
+                                // 得到用户的userUuid
+                                Vue.prototype.uphone = !!data.phone;
+                                setUserUuid({userUuid: data.userUuid}).then((res) => {
+                                    // alert(res)
+                                    new Vue({
+                                        el: '#app',
+                                        router,
+                                        store,
+                                        template: '<App/>',
+                                        components: {App}
+                                    })
+                                })
+                            }
+                        }
                     } else {
                         window.location.href = 'getLoginPhoneInfo:///'
                         // 获取登录信息
@@ -88,6 +114,7 @@ if (isWeixn) {
                             if (data.userUuid !== '') {
                                 
                                 // 得到用户的userUuid
+                                Vue.prototype.uphone = !!data.phone;
                                 setUserUuid({userUuid: data.userUuid}).then((res) => {
                                     // alert(res)
                                     new Vue({

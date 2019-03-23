@@ -21,6 +21,7 @@ export default {
         state.selectedInfo.area = payload.area
         state.selectedInfo.sex = payload.sex
         state.selectedInfo.areaCode = payload.areaCode
+        state.selectedInfo.remark = payload.remark
     },
     setScanStatus (state, status) {
         state.scanStatus = status
@@ -30,5 +31,12 @@ export default {
     },
     setVisitNotice (state, payload) {
         state.visitNotice = payload
+    },
+    changepullup(state,payload){
+        state.pullupshow = payload
+    },
+    Store_setFormMapByGroup(state, payload) {
+        state.Store_formMapByGroup = payload
+
     }
 }
